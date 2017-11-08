@@ -13,11 +13,16 @@ class SwaggerResponseBody extends SwaggerBody
 {
     public function match($body)
     {
-        if (!isset($this->structure['schema'])) {
+        if (!isset($this->structure['schema']) && !isset($this->structure['$ref'])) {
             if (!empty($body)) {
                 throw new NotMatchedException("Expected empty body for " . $this->name);
             }
             return true;
+        }
+
+        if (isset($this->structure['$ref'])) {
+            $defintion = $this->swaggerSchema->getDefintion($this->structure['$ref']);
+            return $this->matchSchema($this->structure['$ref'], $defintion['schema'], $body);
         }
 
         return $this->matchSchema($this->name, $this->structure['schema'], $body);

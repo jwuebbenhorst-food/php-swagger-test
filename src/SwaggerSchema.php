@@ -20,18 +20,8 @@ class SwaggerSchema
 
     public function __construct($jsonFile, $allowNullValues = false)
     {
-        $this->jsonFile = json_decode($jsonFile, true);
+        $this->jsonFile = yaml_parse($jsonFile);
         $this->allowNullValues = (bool) $allowNullValues;
-    }
-
-    public function getHttpSchema()
-    {
-        return isset($this->jsonFile['schemes']) ? $this->jsonFile['schemes'][0] : '';
-    }
-
-    public function getHost()
-    {
-        return isset($this->jsonFile['host']) ? $this->jsonFile['host'] : '';
     }
 
     public function getBasePath()
